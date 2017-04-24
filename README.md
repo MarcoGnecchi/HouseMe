@@ -1,2 +1,2 @@
-# HouseMe
-A crawler to monitor housing association websites
+# WebCrawler
+A crawler to monitor websites updates
