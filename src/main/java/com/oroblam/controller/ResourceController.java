@@ -1,5 +1,6 @@
-package com.oroblam;
+package com.oroblam.controller;
 
+import com.oroblam.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
