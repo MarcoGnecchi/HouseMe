@@ -1,5 +1,6 @@
 package com.oroblam.controller;
 
+import com.oroblam.AddResourceException;
 import com.oroblam.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ResourceController {
     }
 
     @RequestMapping(value = "/monitor", method = RequestMethod.POST)
-    public ResponseEntity add(@RequestBody Resource resource) {
+    public ResponseEntity add(@RequestBody Resource resource) throws AddResourceException {
         Integer id = resourceRepository.add(resource);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")

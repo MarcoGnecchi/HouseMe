@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+import com.oroblam.AddResourceException;
 import com.oroblam.model.Resource;
 import com.oroblam.repository.ResourceRepository;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class ResourceControllerTest {
     }
 
     @Test
-    public void shouldAddANewURLToTheResourcesList(){
+    public void shouldAddANewURLToTheResourcesList() throws AddResourceException {
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
         URI location = restTemplate.postForLocation("/api/monitor", request, Resource.class);
