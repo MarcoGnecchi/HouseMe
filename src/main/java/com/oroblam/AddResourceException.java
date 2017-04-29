@@ -1,5 +1,10 @@
 package com.oroblam;
 
 
-public class AddResourceException extends Throwable {
+import java.io.IOException;
+
+public class AddResourceException extends Exception {
+    public AddResourceException(IOException e) {
+        super(e);
+    }
 }

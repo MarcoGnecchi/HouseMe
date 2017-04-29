@@ -5,13 +5,22 @@ import java.util.Objects;
 public class Resource {
 
     private String url;
+    private String content;
 
     public Resource() {
     }
 
     public Resource(String url) {
-            this.url = url;
-        }
+        this.url = url;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public void setUrl(String url) {
         this.url = url;
