@@ -5,11 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class WebMonitor {
+public class WebMonitorApp {
 
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(WebMonitor.class, args);
+        SpringApplication.run(WebMonitorApp.class, args);
     }
 
     @Bean

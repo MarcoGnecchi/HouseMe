@@ -37,9 +37,9 @@ public class ResourceRepositoryTest {
     @Test
     public void testAdd() throws Exception {
         Resource resource = new Resource();
-        Path path = Paths.get(TEST_WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()));
+        Path path = Paths.get(TEST_WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
         resourceRepository.add(resource);
-        assertTrue(Files.exists(path));
+        assertTrue(path + " do not exist", Files.exists(path));
     }
 
     @After

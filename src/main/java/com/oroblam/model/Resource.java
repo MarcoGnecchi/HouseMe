@@ -41,6 +41,7 @@ public class Resource {
 
     @Override
     public int hashCode() {
-        return Objects.hash(url);
+        //TODO: update it when using a DB
+        return Math.abs(Objects.hash(url));
     }
 }

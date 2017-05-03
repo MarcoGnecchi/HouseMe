@@ -1,6 +1,6 @@
 package com.oroblam.controller;
 
-import com.oroblam.AddResourceException;
+import com.oroblam.repository.AddResourceException;
 import com.oroblam.repository.ResourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

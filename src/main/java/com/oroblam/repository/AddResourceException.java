@@ -1,4 +1,4 @@
-package com.oroblam;
+package com.oroblam.repository;
 
 
 import java.io.IOException;
