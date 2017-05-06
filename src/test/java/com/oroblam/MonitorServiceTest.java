@@ -40,6 +40,7 @@ public class MonitorServiceTest {
 
     private static final String NEW_BODY_CONTENT = "new body content";
     private static final String OLD_BODY_CONTENT = "old body content";
+    private static final String TEST_URL = "http://www.test.co.uk";
 
     @MockBean
     private WebComparatorService webComparatorService;
@@ -58,7 +59,7 @@ public class MonitorServiceTest {
     public void setUp(){
         // Set up the resource
         Resource resourceToCheck = new Resource();
-        resourceToCheck.setUrl("www.test.com");
+        resourceToCheck.setUrl(TEST_URL);
         resourceToCheck.setContent(OLD_BODY_CONTENT);
         when(resourceRepository.getAll()).thenReturn(Arrays.asList(resourceToCheck));
 
@@ -86,10 +87,10 @@ public class MonitorServiceTest {
 
     @Test
     public void shouldHandleMultipleResources() {
-        server.expect(ExpectedCount.times(2), requestTo("www.test.com")).andExpect(method(HttpMethod.GET))
+        server.expect(ExpectedCount.times(2), requestTo(TEST_URL)).andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess(NEW_BODY_CONTENT, MediaType.TEXT_HTML));
-        Resource resource1 = new Resource("www.test.com");
-        Resource resource2 = new Resource("www.test.com");
+        Resource resource1 = new Resource(TEST_URL);
+        Resource resource2 = new Resource(TEST_URL);
         List<Resource> resources = Arrays.asList(resource1,resource2);
         when(resourceRepository.getAll()).thenReturn(resources);
         monitorService.run();
