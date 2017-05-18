@@ -1,4 +1,4 @@
-package com.oroblam;
+package com.oroblam.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +58,7 @@ public class MonitorService {
             } else {
                 log.info("Update NOT detected: {}", resource.getUrl());
             }
-        } catch (RestClientException e) {
+        } catch (RestClientException | IllegalArgumentException e) {
             log.error("Error while pulling new resource content: {}", resource.getUrl(), e);
         }
         return false;

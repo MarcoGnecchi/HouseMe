@@ -1,6 +1,6 @@
 package com.oroblam.controller;
 
-import com.oroblam.MonitorService;
+import com.oroblam.service.MonitorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

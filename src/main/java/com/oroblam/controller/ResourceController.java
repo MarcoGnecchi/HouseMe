@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oroblam.model.Resource;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -17,6 +18,9 @@ import java.net.URI;
 @RestController
 @RequestMapping("/api")
 public class ResourceController {
+
+    @Autowired
+    public RestTemplate restTemplate;
 
     @Autowired
     private ResourceRepository resourceRepository;
@@ -28,7 +32,11 @@ public class ResourceController {
 
     @RequestMapping(value = "/monitor", method = RequestMethod.POST)
     public ResponseEntity add(@RequestBody Resource resource) throws AddResourceException {
+
+
         Integer id = resourceRepository.add(resource);
+        String content = restTemplate.getForObject(resource.getUrl(), String.class);
+        resource.setContent(content);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(id).toUri();

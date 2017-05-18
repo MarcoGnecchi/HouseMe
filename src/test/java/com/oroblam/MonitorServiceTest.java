@@ -5,14 +5,14 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import org.hamcrest.beans.HasPropertyWithValue;
+import com.oroblam.service.MonitorService;
+import com.oroblam.service.WebComparatorService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 import com.oroblam.model.Resource;
 import com.oroblam.repository.ResourceRepository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
