@@ -16,17 +16,17 @@ public class WebComparatorServiceTest {
     }
 
     @Test
-    public void shouldReturnFalseWhenTheContentDiffer() throws Exception {
-        assertFalse(webComparatorService.compare("foo", "bar"));
+    public void shouldReturnTrueWhenTheContentDiffer() throws Exception {
+        assertTrue(webComparatorService.isUpdated("foo", "bar"));
     }
 
     @Test
-    public void shouldReturnTrueWhenTheContentIsIdentical(){
-        assertTrue(webComparatorService.compare("foobar", "foobar"));
+    public void shouldReturnFalseWhenTheContentIsIdentical(){
+        assertFalse(webComparatorService.isUpdated("foobar", "foobar"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenOneArgumentIsInvalid(){
-        webComparatorService.compare(null, "foo");
+        webComparatorService.isUpdated(null, "foo");
     }
 }

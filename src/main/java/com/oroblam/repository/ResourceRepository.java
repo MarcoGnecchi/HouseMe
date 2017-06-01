@@ -46,7 +46,14 @@ public class ResourceRepository {
     }
 
     public void update(Resource resource) {
-
+        String fileName = String.valueOf(resource.hashCode());
+        Path file = null;
+        try {
+            byte[] object = mapper.writeValueAsBytes(resource);
+            Files.write(Paths.get(WORKING_DIRECTORY.toString(), fileName + ".json"), object);
+        } catch (IOException e) {
+            log.error("error uploading file");
+        }
     }
 
     public List<Resource> getAll() {
@@ -68,8 +75,19 @@ public class ResourceRepository {
         return resources;
     }
 
-    public Resource get() {
-        return new Resource();
+    public Resource get(Resource resource) {
+        String fileName = String.valueOf(resource.hashCode());
+        byte[] bytes = new byte[0];
+        Resource savedResource = null;
+        try {
+            bytes = Files.readAllBytes(Paths.get(WORKING_DIRECTORY.toString(), fileName + ".json"));
+            savedResource = mapper.readValue(bytes, Resource.class);
+        } catch (IOException e) {
+            log.error("error getting resource");
+            throw new IllegalArgumentException();
+        }
+
+        return savedResource;
     }
 
 }

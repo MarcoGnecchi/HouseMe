@@ -1,5 +1,8 @@
 package com.oroblam.repository;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -40,6 +43,19 @@ public class ResourceRepositoryTest {
         Path path = Paths.get(TEST_WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
         resourceRepository.add(resource);
         assertTrue(path + " do not exist", Files.exists(path));
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        Resource resource = new Resource("foo.com");
+        Path path = Paths.get(TEST_WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
+        Integer id = resourceRepository.add(resource);
+        assertNull(resource.getContent());
+        resource.setContent("bar");
+        //Updating
+        resourceRepository.update(resource);
+
+        assertThat(resourceRepository.get(resource).getContent(), is("bar"));
     }
 
     @After

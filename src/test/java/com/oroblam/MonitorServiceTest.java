@@ -72,13 +72,13 @@ public class MonitorServiceTest {
     @Test
     public void shouldCompareAResourceWithNewVersion() {
         monitorService.run();
-        verify(webComparatorService, times(1)).compare(OLD_BODY_CONTENT, NEW_BODY_CONTENT);
+        verify(webComparatorService, times(1)).isUpdated(OLD_BODY_CONTENT, NEW_BODY_CONTENT);
     }
 
     @Test
     public void shouldSaveTheNewVersionWhenThereAreChanges() {
         ArgumentCaptor<Resource> argument = ArgumentCaptor.forClass(Resource.class);
-        when(webComparatorService.compare(OLD_BODY_CONTENT, NEW_BODY_CONTENT)).thenReturn(true);
+        when(webComparatorService.isUpdated(OLD_BODY_CONTENT, NEW_BODY_CONTENT)).thenReturn(true);
         monitorService.run();
         verify(resourceRepository).update(argument.capture());
         assertThat(argument.getValue().getContent(), is(equalTo(NEW_BODY_CONTENT)));
@@ -93,12 +93,12 @@ public class MonitorServiceTest {
         List<Resource> resources = Arrays.asList(resource1,resource2);
         when(resourceRepository.getAll()).thenReturn(resources);
         monitorService.run();
-        verify(webComparatorService, atLeast(2)).compare(any(),any());
+        verify(webComparatorService, atLeast(2)).isUpdated(any(),any());
     }
 
     @Test
     public void shouldReturnUpdatedResources(){
-        when(webComparatorService.compare(OLD_BODY_CONTENT, NEW_BODY_CONTENT)).thenReturn(true);
+        when(webComparatorService.isUpdated(OLD_BODY_CONTENT, NEW_BODY_CONTENT)).thenReturn(true);
         List<Resource> updatedResources = monitorService.run();
         assertThat(updatedResources.size(), is(1));
         assertThat(updatedResources.get(0).getContent(), is(equalTo(NEW_BODY_CONTENT)));

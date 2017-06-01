@@ -49,7 +49,7 @@ public class MonitorService {
         }
         try {
             String updatedContent = restTemplate.getForObject(resource.getUrl(), String.class);
-            if (webComparatorService.compare(resource.getContent(), updatedContent)) {
+            if (webComparatorService.isUpdated(resource.getContent(), updatedContent)) {
                 // Update detected
                 log.info("Update detected: {}", resource.getUrl());
                 resource.setContent(updatedContent);

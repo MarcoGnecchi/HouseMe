@@ -37,6 +37,7 @@ public class ResourceController {
         Integer id = resourceRepository.add(resource);
         String content = restTemplate.getForObject(resource.getUrl(), String.class);
         resource.setContent(content);
+        resourceRepository.update(resource);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
                 .buildAndExpand(id).toUri();

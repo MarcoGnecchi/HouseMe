@@ -51,6 +51,11 @@ public class ResourceControllerTest {
         httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
+
+        // Two call are expected, once at the moment of creation of resource, and when the resource is checked
+        mockServer.expect(ExpectedCount.times(1), requestTo("http://www.test.co.uk"))
+                .andRespond(withSuccess("FooBar!!", MediaType.TEXT_PLAIN));
     }
 
     @Test
@@ -61,6 +66,7 @@ public class ResourceControllerTest {
 
     @Test
     public void shouldAddANewURLToTheResourcesList() throws AddResourceException {
+
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
         URI location = testRestTemplate.postForLocation("/api/monitor", request, Resource.class);
@@ -73,12 +79,5 @@ public class ResourceControllerTest {
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
         URI location = testRestTemplate.postForLocation("/api/monitor", request, Resource.class);
-        MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
-
-        // Two call are expected, once at the moment of creation of resource, and when the resource is checked
-        mockServer.expect(ExpectedCount.times(1), requestTo("http://www.test.co.uk"))
-                .andRespond(withSuccess("FooBar!!", MediaType.TEXT_PLAIN));
-
-        mockServer.verify();
     }
 }

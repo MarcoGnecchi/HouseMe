@@ -51,6 +51,9 @@ public class IntegrationTests {
     @Autowired
     private ResourceRepository resourceRepository;
 
+    @MockBean
+    private NotificationService notificationService;
+
     private HttpHeaders httpHeaders;
 
     @Before
@@ -63,34 +66,43 @@ public class IntegrationTests {
 
     @Test
     public void shouldAddANewURLToTheResourcesList() throws AddResourceException {
+        MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
+        mockServer.expect(ExpectedCount.once(), requestTo("http://www.test.co.uk")).andRespond(withSuccess());
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
         URI location = testRestTemplate.postForLocation("/api/monitor", request, Resource.class);
         assertThat(location, notNullValue());
         // Check file creation
         Path filePath = Paths.get(ResourceRepository.WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
-        assertTrue("File does not exist:" + filePath , Files.exists(filePath));
+        assertTrue("File does not exist:" + filePath, Files.exists(filePath));
+        mockServer.verify();
     }
 
     @Test
-    public void shouldDetectChangeWhenAResourceIsUpdated() throws Exception {
+    public void shouldDetectChangeWhenAResourceIsUpdatedAndNotify() throws Exception {
         //Change test folder
         ReflectionTestUtils.setField(resourceRepository,"WORKING_DIRECTORY", ResourceRepositoryTest.TEST_WORKING_DIRECTORY);
         //Push resource
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
-        URI location = testRestTemplate.postForLocation("/api/monitor", request, Resource.class);
 
-
-//        RestTemplate clientRestTemplate = new RestTemplate();
+        //prepare server
         MockRestServiceServer mockServer = MockRestServiceServer.createServer(restTemplate);
-
         mockServer.expect(ExpectedCount.once(), requestTo("http://www.test.co.uk")).andRespond(withSuccess("Hello world", MediaType.TEXT_PLAIN));
 
+        //add resource
+        URI location = testRestTemplate.postForLocation("/api/monitor", request, Resource.class);
 
-        // use RestTemplate ...
-//        String response = testRestTemplate.getForObject("/api/check", String.class);
+        mockServer.reset();
 
-        mockServer.verify();
+        //prepare server
+        mockServer.expect(ExpectedCount.once(), requestTo("http://www.test.co.uk")).andRespond(withSuccess("Hello again world!", MediaType.TEXT_PLAIN));
+
+        //Trigger checks
+        testRestTemplate.getForEntity("/api/check", String.class);
+
+        //Check notification
+        //TODO: to be replace with actual implementation
+        verify(notificationService).notify(resource);
     }
 }

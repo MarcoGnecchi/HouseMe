@@ -15,12 +15,12 @@ public class WebComparatorService {
      * @param newContent
      * @return true whe a difference is detected
      */
-    public boolean compare(String savedContent, String newContent) throws IllegalArgumentException {
+    public boolean isUpdated(String savedContent, String newContent) throws IllegalArgumentException {
 
         if (savedContent == null || newContent == null) {
-            log.error("Cannot compare null elements");
-            throw new IllegalArgumentException("Cannot compare null element");
+            log.error("Cannot check null elements");
+            throw new IllegalArgumentException("Cannot check null element");
         }
-        return savedContent.equals(newContent);
+        return !savedContent.equals(newContent);
     }
 }
