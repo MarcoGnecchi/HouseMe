@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -28,19 +29,22 @@ public class ResourceRepositoryTest {
     @Autowired
     public ResourceRepository resourceRepository;
 
-    public static final Path TEST_WORKING_DIRECTORY = Paths.get("/Users/magnecch/monitor_test");
+
+    @Value("${working.directory}")
+    private String workingDirectory;
 
     @Before
     public void setUp() throws IOException {
-        Files.createDirectories(TEST_WORKING_DIRECTORY);
-        Files.walk(TEST_WORKING_DIRECTORY, FileVisitOption.FOLLOW_LINKS).map(Path::toFile).forEach(File::delete);
-        ReflectionTestUtils.setField(resourceRepository, "WORKING_DIRECTORY", TEST_WORKING_DIRECTORY);
+        Path workingPath = Paths.get(workingDirectory);
+        Files.createDirectories(workingPath);
+        Files.walk(workingPath, FileVisitOption.FOLLOW_LINKS).map(Path::toFile).forEach(File::delete);
+        ReflectionTestUtils.setField(resourceRepository, "WORKING_DIRECTORY", workingPath);
     }
 
     @Test
     public void testAdd() throws Exception {
         Resource resource = new Resource();
-        Path path = Paths.get(TEST_WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
+        Path path = Paths.get(workingDirectory, String.valueOf(resource.hashCode()) + ".json");
         resourceRepository.add(resource);
         assertTrue(path + " do not exist", Files.exists(path));
     }
@@ -48,7 +52,7 @@ public class ResourceRepositoryTest {
     @Test
     public void testUpdate() throws Exception {
         Resource resource = new Resource("foo.com");
-        Path path = Paths.get(TEST_WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
+        Path path = Paths.get(workingDirectory, String.valueOf(resource.hashCode()) + ".json");
         Integer id = resourceRepository.add(resource);
         assertNull(resource.getContent());
         resource.setContent("bar");
@@ -60,7 +64,7 @@ public class ResourceRepositoryTest {
 
     @After
     public void tearDown() throws IOException {
-        purgeDirectory(TEST_WORKING_DIRECTORY);
+        purgeDirectory(Paths.get(workingDirectory));
     }
 
     public void purgeDirectory(Path directory) throws IOException {
@@ -68,13 +72,9 @@ public class ResourceRepositoryTest {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
+                if(file.getFileName().endsWith(".json")){
+                    Files.delete(file);
+                }
                 return FileVisitResult.CONTINUE;
             }
         });

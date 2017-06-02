@@ -8,10 +8,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oroblam.model.Resource;
+
+import javax.annotation.PostConstruct;
 
 @Component
 public class ResourceRepository {
@@ -19,11 +22,18 @@ public class ResourceRepository {
     @Autowired
     private ObjectMapper mapper;
 
+
+    private Path WORKING_DIRECTORY;
+
+    public ResourceRepository(@Value("${working.directory}") String workingDirectory) {
+        WORKING_DIRECTORY = Paths.get(workingDirectory);
+    }
+
+
     DirectoryStream.Filter<Path> filter = file -> file.getFileName().toString().endsWith(".json");
 
     private Logger log = LoggerFactory.getLogger(ResourceRepository.class);
 
-    public static Path WORKING_DIRECTORY = Paths.get("/Users/magnecch/monitor");
 
     public Integer add(Resource resource) throws AddResourceException {
         try {

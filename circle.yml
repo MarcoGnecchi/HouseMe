@@ -1,22 +1,17 @@
 #CircleCI configuration file
 machine:
   services:
-    - docker
 
 dependencies:
   pre:
-    - mvn install
   post:
-    - docker build -t 312827138267.dkr.ecr.eu-west-2.amazonaws.com/houseme:$CIRCLE_SHA1 .
 
 test:
   post:
-    - docker run -d -p 8080:8080 --name houseme 312827138267.dkr.ecr.us-east-1.amazonaws.com/houseme:$CIRCLE_SHA1; sleep 5
-    - curl --retry 10 --retry-delay 5 localhost:8080 | grep "Hello World!"
+    - mvn test -Dworking.directory=/tmp
 
 deployment:
   prod:
     branch: master
     commands:
-      - ./deploy.sh
 

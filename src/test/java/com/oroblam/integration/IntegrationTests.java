@@ -20,12 +20,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.oroblam.model.Resource;
@@ -38,11 +40,14 @@ import org.springframework.web.client.RestTemplate;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@TestPropertySource(locations="classpath:test.properties")
 public class IntegrationTests {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Value("${working.directory}")
+    private String workingDirectory = "";
 
     //class that will we used to call external services
     @Autowired
@@ -51,7 +56,7 @@ public class IntegrationTests {
     @Autowired
     private ResourceRepository resourceRepository;
 
-    @MockBean
+    @MockBean//TODO needs to be replaced by actual class
     private NotificationService notificationService;
 
     private HttpHeaders httpHeaders;
@@ -73,15 +78,13 @@ public class IntegrationTests {
         URI location = testRestTemplate.postForLocation("/api/monitor", request, Resource.class);
         assertThat(location, notNullValue());
         // Check file creation
-        Path filePath = Paths.get(ResourceRepository.WORKING_DIRECTORY.toString(), String.valueOf(resource.hashCode()) + ".json");
+        Path filePath = Paths.get(workingDirectory, String.valueOf(resource.hashCode()) + ".json");
         assertTrue("File does not exist:" + filePath, Files.exists(filePath));
         mockServer.verify();
     }
 
     @Test
     public void shouldDetectChangeWhenAResourceIsUpdatedAndNotify() throws Exception {
-        //Change test folder
-        ReflectionTestUtils.setField(resourceRepository,"WORKING_DIRECTORY", ResourceRepositoryTest.TEST_WORKING_DIRECTORY);
         //Push resource
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
