@@ -1,4 +1,4 @@
-package com.oroblam;
+package com.oroblam.service;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;

@@ -25,6 +25,7 @@ public class ResourceRepository {
 
     private Path WORKING_DIRECTORY;
 
+    @Autowired
     public ResourceRepository(@Value("${working.directory}") String workingDirectory) {
         WORKING_DIRECTORY = Paths.get(workingDirectory);
     }

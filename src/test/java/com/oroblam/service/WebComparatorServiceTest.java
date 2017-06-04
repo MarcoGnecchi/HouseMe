@@ -1,4 +1,4 @@
-package com.oroblam;
+package com.oroblam.service;
 
 import com.oroblam.service.WebComparatorService;
 import org.junit.Before;
