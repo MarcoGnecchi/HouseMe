@@ -1,0 +1,23 @@
+working:
+  directory: "/Users/magnecch/monitor"
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: oroblam@gmail.com
+    password: password
+    properties.mail.smtp.auth": true
+    properties.mail.smtp.starttls.enable: true
+
+server:
+    port: 9000
+---
+
+spring:
+    profiles: production
+working:
+    directory: "/Users/oroblam/monitor"
+serve:
+    port: 9001
+
