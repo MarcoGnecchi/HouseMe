@@ -18,6 +18,6 @@ spring:
     profiles: production
 working:
     directory: "/Users/oroblam/monitor"
-serve:
+server:
     port: 9001
 
