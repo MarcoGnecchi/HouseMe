@@ -96,7 +96,7 @@ public class IntegrationTests {
         //start mail server
         wiser.start();
 
-        // Push resource
+        // prepare resource
         Resource resource = new Resource("http://www.test.co.uk");
         HttpEntity<Resource> request = new HttpEntity<>(resource, httpHeaders);
 
@@ -120,6 +120,7 @@ public class IntegrationTests {
         // Check notification
         assertThat(wiser.getMessages().size(), is(1));
 
+        //stop mail server
         wiser.stop();
     }
 }

@@ -14,4 +14,5 @@ deployment:
   prod:
     branch: master
     commands:
+     - ./deploy_script.sh
 
