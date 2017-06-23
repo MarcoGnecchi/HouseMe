@@ -1,5 +1,5 @@
 working:
-  directory: "/Users/magnecch/monitor"
+  directory: ${user.home}/monitor
 
 spring:
   mail:
@@ -17,7 +17,7 @@ server:
 spring:
     profiles: production
 working:
-    directory: "/Users/oroblam/monitor"
+    directory: ${user.home}/monitor
 server:
     port: 9001
 

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import com.oroblam.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,6 @@ public class ResourceRepositoryTest {
         Path workingPath = Paths.get(workingDirectory);
         Files.createDirectories(workingPath);
         Files.walk(workingPath, FileVisitOption.FOLLOW_LINKS).map(Path::toFile).forEach(File::delete);
-        ReflectionTestUtils.setField(resourceRepository, "WORKING_DIRECTORY", workingPath);
     }
 
     @Test
@@ -64,19 +64,6 @@ public class ResourceRepositoryTest {
 
     @After
     public void tearDown() throws IOException {
-        purgeDirectory(Paths.get(workingDirectory));
-    }
-
-    public void purgeDirectory(Path directory) throws IOException {
-        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                if(file.getFileName().endsWith(".json")){
-                    Files.delete(file);
-                }
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        TestUtils.purgeDirectory(Paths.get(workingDirectory));
     }
 }

@@ -2,6 +2,8 @@ package com.oroblam.controller;
 
 import com.oroblam.repository.AddResourceException;
 import com.oroblam.repository.ResourceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,8 @@ import java.net.URI;
 @RequestMapping("/api")
 public class ResourceController {
 
+    Logger log = LoggerFactory.getLogger(ResourceController.class);
+
     @Autowired
     public RestTemplate restTemplate;
 
@@ -33,7 +37,7 @@ public class ResourceController {
     @RequestMapping(value = "/monitor", method = RequestMethod.POST)
     public ResponseEntity add(@RequestBody Resource resource) throws AddResourceException {
 
-
+        log.info("Adding new resource:{}", resource);
         Integer id = resourceRepository.add(resource);
         String content = restTemplate.getForObject(resource.getUrl(), String.class);
         resource.setContent(content);

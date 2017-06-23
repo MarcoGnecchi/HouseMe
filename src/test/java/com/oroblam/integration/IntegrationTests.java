@@ -8,12 +8,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import com.oroblam.TestUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -39,8 +42,8 @@ import com.oroblam.repository.ResourceRepository;
 import com.oroblam.service.NotificationService;
 
 @RunWith(SpringRunner.class)
+@TestPropertySource(locations = "classpath:/test.properties")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-@TestPropertySource(locations = "classpath:test.properties")
 public class IntegrationTests {
 
     @Autowired
@@ -73,8 +76,8 @@ public class IntegrationTests {
     }
 
     @After
-    public void tearDown() {
-
+    public void tearDown() throws IOException {
+        TestUtils.purgeDirectory(Paths.get(workingDirectory));
     }
 
     @Test
@@ -122,5 +125,10 @@ public class IntegrationTests {
 
         //stop mail server
         wiser.stop();
+    }
+
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+        return new PropertySourcesPlaceholderConfigurer();
     }
 }

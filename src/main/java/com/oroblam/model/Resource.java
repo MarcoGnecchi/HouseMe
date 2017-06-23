@@ -44,4 +44,12 @@ public class Resource {
         //TODO: update it when using a DB
         return Math.abs(Objects.hash(url));
     }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "url='" + url + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

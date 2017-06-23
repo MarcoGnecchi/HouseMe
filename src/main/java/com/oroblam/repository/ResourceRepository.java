@@ -40,7 +40,7 @@ public class ResourceRepository {
         try {
             //Create working directory if does NOT exist
             if (!Files.exists(WORKING_DIRECTORY)) {
-                Files.createDirectory(WORKING_DIRECTORY);
+                Files.createDirectories(WORKING_DIRECTORY);
             }
             String fileName = String.valueOf(resource.hashCode());
             Path file = Files
@@ -58,7 +58,6 @@ public class ResourceRepository {
 
     public void update(Resource resource) {
         String fileName = String.valueOf(resource.hashCode());
-        Path file = null;
         try {
             byte[] object = mapper.writeValueAsBytes(resource);
             Files.write(Paths.get(WORKING_DIRECTORY.toString(), fileName + ".json"), object);
@@ -70,8 +69,7 @@ public class ResourceRepository {
     public List<Resource> getAll() {
 
         List<Resource> resources = new ArrayList<>();
-        try {
-            DirectoryStream<Path> paths = Files.newDirectoryStream(WORKING_DIRECTORY, filter);
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(WORKING_DIRECTORY, filter);){
             paths.forEach(path -> {
                 try {
                     Resource resource = mapper.readValue(path.toFile(), Resource.class);
@@ -81,7 +79,7 @@ public class ResourceRepository {
                 }
             });
         } catch (IOException e) {
-            log.error("Error retrieving resources");
+            log.error("Error retrieving resources", e);
         }
         return resources;
     }
